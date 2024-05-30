@@ -58,27 +58,71 @@ class CircularQueue():
         self.rear = 0
 
     def is_empty(self):
-        return self.front == self.rear
+        return self.front == self.rear  # front와 rear가 같으면 공백 상태
 
     def is_full(self):
-        return (self.rear + 1) % self.capacity == self.front
+        return (self.rear + 1) % self.capacity == self.front  # rear 다음이 front이면 포화 상태
 
     def enqueue(self, item):
+        # 포화가 아니면 삽입 가능
+        # rear를 시계 방향으로 회전시키고 그 위치에서 새로운 요소를 저장
         if not self.is_full():
             self.rear = (self.rear + 1) % self.capacity
             self.array[self.rear] = item
         else:
-            pass
+            pass  # 오버플로 예외
 
     def dequeue(self):
         if not self.is_empty():
+            # 공백이 아니면 삭제 가능
+            # front 를 회전시키고 그 위치의 요소 반환
             self.front = (self.front + 1) % self.capacity
             return self.array[self.front]
         else:
-            pass
+            pass  # 언더플로 예외
 
     def peek(self):
         if not self.is_empty():
             return self.array[(self.front + 1) % self.capacity]
         else:
-            pass
+            pass  # 언더플로 예외
+
+
+# Queue 라이브러리 사용
+import queue
+
+data_queue = queue.Queue()
+
+data_queue.put("abc")
+data_queue.put(1)
+
+data_queue.qsize()  # 2
+data_queue.get()  # abc -> 제일 먼저 인서트된 데이터 출력
+
+data_queue.qsize()  # 1 -> 9번줄에서 abc가 빠져나갔기 때문
+data_queue.get()  # 1 출력
+
+# LIFO Queue
+lifo_queue = queue.LifoQueue()
+
+lifo_queue.put("abc")
+lifo_queue.put(1)
+
+lifo_queue.qsize()  # 2
+lifo_queue.get()  # 1 -> LIFO 구조이기 때문에 1이 먼저 출력
+
+lifo_queue.qsize()  # 1 -> 9번줄에서 1가 빠져나갔기 때문
+lifo_queue.get()  # abc 출력
+
+# Priority Queue
+priority_queue = queue.PriorityQueue()
+
+priority_queue.put((10, "abc"))  # 우선순위를 표현하기 위해 튜플로 인서트 (우선순위, value)
+priority_queue.put((5, 1))
+priority_queue.put((15, "ef"))
+
+priority_queue.qsize()  # 3 -> 데이터는 3개
+priority_queue.get()  # (5,1) -> 우선순위가 가장 높은 데이터 출력
+
+priority_queue.qsize()  # 2 -> 10번줄에서 (5,1)가 빠져나갔기 때문
+priority_queue.get()  # (10,"abc") -> 두번째 우선순위
