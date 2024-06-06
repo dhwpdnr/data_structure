@@ -67,3 +67,68 @@ n2.right = n5
 n3.left = n6
 n3.right = n7
 n4.left = n8
+
+
+# 힙트리
+# 힙트리는 완전 이진 트리로서, 부모 노드의 값이 자식 노드의 값보다 크거나 같은 트리이다.
+# 힙트리는 최대 힙트리와 최소 힙트리로 나뉜다.
+# 최대 힙트리는 부모 노드의 값이 자식 노드의 값보다 크거나 같은 완전 이진 트리이다.
+# 최소 힙트리는 부모 노드의 값이 자식 노드의 값보다 작거나 같은 완전 이진 트리이다.
+# 힙트리는 배열로 구현할 수 있다.
+class HeapTree():
+    def __init__(self):
+        self.tree = [None]
+        self.size = 0
+
+    def insert(self, item):
+        self.tree.append(item)
+        self.size += 1
+        cur = self.size
+        parent = cur // 2
+        while parent > 0 and self.tree[cur] > self.tree[parent]:
+            self.tree[cur], self.tree[parent] = self.tree[parent], self.tree[cur]
+            cur = parent
+            parent = cur // 2
+
+    def delete(self):
+        if self.size == 0:
+            return None
+        delete_item = self.tree[1]
+        self.tree[1], self.tree[self.size] = self.tree[self.size], self.tree[1]
+        self.tree.pop()
+        self.size -= 1
+        cur = 1
+        while cur * 2 <= self.size:
+            child = cur * 2
+            if child + 1 <= self.size and self.tree[child] < self.tree[child + 1]:
+                child += 1
+            if self.tree[cur] >= self.tree[child]:
+                break
+            self.tree[cur], self.tree[child] = self.tree[child], self.tree[cur]
+            cur = child
+        return delete_item
+
+    def print_tree(self):
+        print(self.tree)
+
+
+heap = HeapTree()
+heap.insert(3)
+heap.insert(6)
+heap.insert(2)
+heap.insert(8)
+heap.insert(1)
+heap.insert(5)
+heap.insert(7)
+heap.insert(4)
+heap.print_tree()
+print(heap.delete())
+heap.print_tree()
+print(heap.delete())
+heap.print_tree()
+print(heap.delete())
+heap.print_tree()
+print(heap.delete())
+heap.print_tree()
+print(heap.delete())
+heap.print_tree()
