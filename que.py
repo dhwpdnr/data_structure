@@ -57,6 +57,12 @@ class CircularQueue():
         self.front = 0
         self.rear = 0
 
+    def __str__(self):
+        if self.front < self.rear:
+            return str(self.array[self.front + 1:self.rear + 1])
+        else:
+            return str(self.array[self.front + 1:self.capacity] + self.array[0:self.rear + 1])
+
     def is_empty(self):
         return self.front == self.rear  # front와 rear가 같으면 공백 상태
 
@@ -87,6 +93,27 @@ class CircularQueue():
         else:
             pass  # 언더플로 예외
 
+    def size(self):
+        return (self.rear - self.front + self.capacity) % self.capacity
+
+
+q = CircularQueue(8)
+q.enqueue("A")
+q.enqueue("B")
+q.enqueue("C")
+q.enqueue("D")
+q.enqueue("E")
+q.enqueue("F")
+
+print("A B C D E F 삽입", q)
+print("dequeue -> ", q.dequeue())
+print("dequeue -> ", q.dequeue())
+print("dequeue -> ", q.dequeue())
+print("dequeue 3번 진행 ", q)
+q.enqueue("G")
+q.enqueue("H")
+q.enqueue("I")
+print("G H I 삽입", q)
 
 # Queue 라이브러리 사용
 import queue
