@@ -83,6 +83,45 @@ class Deque:
         print(self.deq[i])
 
 
+from que import CircularQueue
+
+
+# 원형 큐를 상속한 원형 덱
+class CircularDeque(CircularQueue):
+    def __init__(self, capacity=10):
+        super().__init__(capacity)
+
+    def add_front(self, item):
+        if not self.is_full():
+            self.array[self.front] = item
+            self.front = (self.front - 1 + self.capacity) % self.capacity
+        else:
+            pass
+
+    def add_rear(self, item):
+        self.enqueue(item)
+
+    def delete_front(self):
+        return self.dequeue()
+
+    def delete_rear(self):
+        if not self.is_empty():
+            item = self.array[self.rear]
+            self.rear = (self.rear - 1 + self.capacity) % self.capacity
+            return item
+        else:
+            pass
+
+    def get_front(self):
+        return self.peek()
+
+    def get_rear(self):
+        if not self.is_empty():
+            return self.array[self.rear]
+        else:
+            pass
+
+
 # deque 모듈 사용
 from collections import deque
 
