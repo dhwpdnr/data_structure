@@ -115,6 +115,56 @@ q.enqueue("H")
 q.enqueue("I")
 print("G H I 삽입", q)
 
+
+# 우선순위 큐
+class PriorityQueue():
+    def __init__(self, capacity=10):
+        self.capacity = capacity
+        self.array = [None] * self.capacity
+        self.size = 0
+
+    def __str__(self):
+        return str(self.array[:self.size])
+
+    def is_empty(self):
+        return self.size == 0
+
+    def is_full(self):
+        return self.size == self.capacity
+
+    def enqueue(self, e):
+        if not self.is_full():
+            self.array[self.size] = e
+            self.size += 1
+
+    def find_max_index(self):
+        if self.is_empty():
+            return -1
+        max_index = 0
+        for i in range(1, self.size):
+            if self.array[i] > self.array[max_index]:  # 최대값의 인덱스를 찾는다. O(n)
+                max_index = i
+        return max_index
+
+    def dequeue(self):
+        """
+        우선 순위가 가장 높은 요소 삭제
+        max_index 요소를 찾고 이것을 마지막 요소와 교환
+        맨 마지막 요소를 반환
+        size 도 하나 줄임
+        """
+        max_index = self.find_max_index()
+        if max_index != -1:
+            self.size -= 1
+            self.array[max_index], self.array[self.size] = self.array[self.size], self.array[max_index]
+            return self.array[self.size]
+
+    def peek(self):
+        max_index = self.find_max_index()
+        if max_index != -1:
+            return self.array[max_index]
+
+
 # Queue 라이브러리 사용
 import queue
 
