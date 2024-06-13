@@ -1,57 +1,51 @@
-class ListNode:
-    def __init__(self, val):
-        self.val = val
-        self.next = None
+# 단순 연결 노드 클래스
+class Node:
+    def __init__(self, elem, link=None):
+        self.data = elem
+        self.link = link
 
 
-def printNodes(node: ListNode):
-    crnt_node = node
-    while crnt_node is not None:
-        print(crnt_node.val, end=' ')
-        crnt_node = crnt_node.next
-
-
-class SLinkedList:
+# 연결된 스택 클래스
+class LinkedStack:
     def __init__(self):
-        self.head = None
+        self.top = None
 
-    def addAtHead(self, val):  # O(1)
-        node = ListNode(val)
-        node.next = self.head
-        self.head = node
+    def is_empty(self):
+        return self.top == None
 
-    # but when the list
-    def addBack(self, val):  # O(n)
-        node = ListNode(val)
-        crnt_node = self.head
-        while crnt_node.next:
-            crnt_node = crnt_node.next
-        crnt_node.next = node
+    def is_full(self):
+        return False
 
-    def findNode(self, val):  # O(n)
-        crnt_node = self.head
-        while crnt_node is not None:
-            if crnt_node.val == val:
-                return crnt_node
-            crnt_node = crnt_node.next
-        raise RuntimeError('Node not found')
+    # 삽입연산
+    def push(self, e):
+        self.top = Node(e, self.top)
 
-    def addAfter(self, node, val):  # O(1)
-        new_node = ListNode(val)
-        new_node.next = node.next
-        node.next = new_node
+    # 삭제연산
+    def pop(self):
+        if not self.is_empty():
+            n = self.top
+            self.top = n
+            return n.data
 
-    def deleteAfter(self, prev_node):  # O(1)
-        if prev_node.next is not None:
-            prev_node.next = prev_node.next.next
+    def peek(self):
+        if not self.is_empty():  # 공백이 아니면
+            return self.top.data  # 머리 노드의 데이터 반환
 
+    def size(self):
+        node = self.top
+        count = 0
+        while not node == None:
+            node = node.link
+            count += 1
+        return count
 
-# 이중 연결 리스트
-class Node(object):
-    def __init__(self, data, prev=None, next=None):
-        self.data = data
-        self.prev = prev
-        self.next = next
+    def __str__(self):
+        arr = []
+        node = self.top
+        while not node == None:
+            arr.append(node.data)
+            node = node.link
+        return str(arr)
 
 
 class DList(object):
