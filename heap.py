@@ -139,6 +139,54 @@ class MinHeap():
         return popped
 
 
+# 최대힙 삽입 연산
+def heap_push(heap, n):
+    heap.append(n)
+    i = len(heap) - 1
+    while i != 1:
+        pi = i // 2
+        if n <= heap[pi]:
+            break
+        heap[i] = heap[pi]
+        i = pi
+    heap[i] = n
+
+
+# 최대힙 삭제 연산
+def heap_pop(heap):
+    size = len(heap) - 1
+    if size == 0:
+        return None
+    pi = 1
+    i = 2
+    root = heap[1]
+    last = heap[size]
+
+    while i <= size:
+        if i < size and heap[i] < heap[i + 1]:
+            i += 1
+        if last >= heap[i]:
+            break
+        heap[pi] = heap[i]
+        pi = i
+        i *= 2
+
+    heap[pi] = last
+    heap.pop()
+    return root
+
+
+data = [2, 5, 4, 8, 9, 3, 7, 3]
+heap = [0]
+for e in data:
+    heap_push(heap, e)
+    print("heap: ", heap[1:])
+
+print("삭제 : ", heap_pop(heap))
+print("heap: ", heap[1:])
+print("삭제 : ", heap_pop(heap))
+print("heap: ", heap[1:])
+
 import heapq
 
 heap = []
@@ -162,3 +210,12 @@ result2 = heap[0]
 
 print(result2)
 print(heap)
+
+arr = [5, 3, 8, 4, 9, 1, 6, 2, 7]
+print(arr)
+heapq.heapify(arr)
+print(arr)
+print(heapq.heappop(arr))
+print(heapq.heappop(arr))
+print(heapq.heappop(arr))
+print(arr)
