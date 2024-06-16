@@ -93,3 +93,40 @@ def delete_bst(root, key):
         root.value = succ.value
         root.right = delete_bst(root.right, succ.key)
     return root
+
+
+def inorder(n):
+    if n is not None:
+        inorder(n.left)
+        print(n.data, end=' ')
+        inorder(n.right)
+
+
+# 이진탐색트리를 이용한 맵
+class BSTMap():
+    def __init__(self):
+        self.root = None
+
+    def is_empty(self):
+        return self.root == None
+
+    def find_max(self):
+        return search_max_bst(self.root)
+
+    def find_min(self):
+        return search_min_bst(self.root)
+
+    def search_value(self, value):
+        return search_value_bst(self.root, value)
+
+    def insert(self, key, value=None):
+        n = BSTNode(key, value)
+        self.root = insert_bst(self.root, n)
+
+    def delete(self, key):
+        self.root = delete_bst(self.root, key)
+
+    def display(self, msg='BSTMap : '):
+        print(msg, end='')
+        inorder(self.root)
+        print()
