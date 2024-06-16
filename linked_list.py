@@ -48,109 +48,154 @@ class LinkedStack:
         return str(arr)
 
 
-class DList(object):
+# 연결된 리스트 클래스
+class LinkedList:
     def __init__(self):
-        self.head = Node(None)
-        self.tail = Node(None, self.head)
-        self.head.next = self.tail
-        self.size = 0
-
-    def listSize(self):
-        return self.size
+        self.head = None
 
     def is_empty(self):
-        if self.size != 0:
-            return False
-        else:
-            return True
+        return self.head == None
 
-    def selectNode(self, idx):
-        if idx > self.size:
-            print("Overflow: Index Error")
+    def is_full(self):
+        return False
+
+    def get_node(self, pos):
+        if pos < 0:
             return None
-        if idx == 0:
-            return self.head
-        if idx == self.size:
-            return self.tail
-        if idx <= self.size // 2:
-            target = self.head
-            for _ in range(idx):
-                target = target.next
-            return target
-        else:
-            target = self.tail
-            for _ in range(self.size - idx):
-                target = target.prev
-            return target
+        node = self.head
+        while pos > 0 and node != None:
+            node = node.link
+            pos -= 1
+        return node
 
-    def appendleft(self, value):
-        if self.is_empty():
-            self.head = Node(value)
-            self.tail = Node(None, self.head)
-            self.head.next = self.tail
+    def get_entry(self, pos):
+        node = self.get_node(pos)
+        if node == None:
+            return None
         else:
-            tmp = self.head
-            self.head = Node(value, None, self.head)
-            tmp.prev = self.head
-        self.size += 1
+            return node.data
 
-    def append(self, value):
-        if self.is_empty():
-            self.head = Node(value)
-            self.tail = Node(None, self.head)
-            self.head.next = self.tail
+    def insert(self, pos, elem):
+        before = self.get_node(pos - 1)
+        if before == None:
+            self.head = Node(elem, self.head)
         else:
-            tmp = self.tail.prev
-            newNode = Node(value, tmp, self.tail)
-            tmp.next = newNode
-            self.tail.prev = newNode
-        self.size += 1
+            before.link = Node(elem, before.link)
 
-    def insert(self, value, idx):
+    def delete(self, pos):
+        before = self.get_node(pos - 1)
+        if before == None:
+            if self.head is not None:
+                self.head = self.head.link
+        elif before.link != None:
+            before.link = before.link.link
+
+
+# 연결된 큐 클래스
+class LinkedQueue:
+    def __init__(self):
+        self.tail = None
+
+    def is_empty(self):
+        return self.tail == None
+
+    def is_full(self):
+        return False
+
+    def enqueue(self, item):
+        node = Node(item, None)
         if self.is_empty():
-            self.head = Node(value)
-            self.tail = Node(None, self.head)
-            self.head.next = self.tail
+            self.tail = node
+            node.link = node
         else:
-            tmp = self.selectNode(idx)
-            if tmp == None:
-                return
-            if tmp == self.head:
-                self.appendleft(value)
-            elif tmp == self.tail:
-                self.append(value)
+            node.link = self.tail.link
+            self.tail.link = node
+            self.tail = node
+
+    def dequeue(self):
+        if not self.is_empty():
+            data = self.tail.link.data
+            if self.tail.link == self.tail:
+                self.tail = None
             else:
-                tmp_prev = tmp.prev
-                newNode = Node(value, tmp_prev, tmp)
-                tmp_prev.next = newNode
-                tmp.prev = newNode
-        self.size += 1
+                self.tail.link = self.tail.link.link
+            return data
 
-    def delete(self, idx):
+    def size(self):
         if self.is_empty():
-            print("Underflow Error")
-            return
+            return 0
         else:
-            tmp = self.selectNode(idx)
-            if tmp == None:
-                return
-            elif tmp == self.head:
-                tmp = self.head
-                self.head = self.head.next
-            elif tmp == self.tail:
-                tmp = self.tail
-                self.tail = self.tail.prev
-            else:
-                tmp.prev.next = tmp.next
-                tmp.next.prev = tmp.prev
-            del (tmp)
-            self.size -= 1
+            count = 1
+            node = self.tail.link
+            while not node == self.tail:
+                node = node.link
+                count += 1
+            return count
 
-    def printlist(self):
-        target = self.head
-        while target != self.tail:
-            if target.next != self.tail:
-                print(target.data, '<=> ', end='')
+    def __str__(self):
+        arr = []
+        if not self.is_empty():
+            node = self.tail.link
+            while not node == self.tail:
+                arr.append(node.data)
+                node = node.link
+            arr.append(node.data)
+        return str(arr)
+
+
+# 이중 연결 구조의 노드 클래스
+class DNode:
+    def __init__(self, elem, prev=None, next=None):
+        self.data = elem
+        self.prev = prev
+        self.next = next
+
+
+# 연결된 덱 클래스
+
+class DoublyLinkedDeque:
+    def __init__(self):
+        self.front = None
+        self.rear = None
+
+    def is_empty(self):
+        return self.front == None
+
+    def is_full(self):
+        return False
+
+    def add_front(self, item):
+        node = DNode(item, None, self.front)
+        if self.is_empty():
+            self.front = self.rear = node
+        else:
+            self.front.prev = node
+            self.front = node
+
+    def add_rear(self, item):
+        node = DNode(item, self.rear, None)
+        if self.is_empty():
+            self.front = self.rear = node
+        else:
+            self.rear.next = node
+            self.rear = node
+
+    def delete_front(self):
+        if not self.is_empty():
+            data = self.front.data
+            self.front = self.front.next
+            if self.front == None:
+                self.rear = None
             else:
-                print(target.data)
-            target = target.next
+                self.front.prev = None
+            return data
+
+    def delete_rear(self):
+        if not self.is_empty():
+            data = self.rear.data
+            self.rear = self.rear.prev
+            if self.rear == None:
+                self.front = None
+            else:
+                self.rear.next = None
+            return data
